@@ -11,9 +11,9 @@ const shoppingListSchema = new Schema({
         }
     ],
     lastUpdatedDate: {
-        type: Date,
+        type: Number,
         default: function(){
-            return new Date();
+            return new Date().getTime();
         }
     },
     sharedWith:[
@@ -24,4 +24,4 @@ const shoppingListSchema = new Schema({
     ],
 });
 
-export default mongoose.model('shoppingLists', shoppingListSchema);
+export default mongoose.model('ShoppingLists', shoppingListSchema);

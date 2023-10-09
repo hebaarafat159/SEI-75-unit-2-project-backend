@@ -8,22 +8,27 @@ const listItemSchema = new Schema({
         ref: 'Product'
     },
     quantity:{type: Number, required: true, default:1},
-    measure:{
+    measure_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Measurement'
     },
     lastUpdatedDate: {
-        type: Date,
+        type: Number,
         default: function(){
-            return new Date();
+            return new Date().getTime();
         }
     },
     hasBrought:{
         type: Boolean,
         require: true,
         default: false
-    }
+    },
+    list_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'ShoppingList'
+    },
 },{
     timestamp: true
 });

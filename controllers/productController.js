@@ -10,7 +10,6 @@ export default {
     getProductsOfCategory,
     getProductById,
 
-
     getAllMeasures,
     getMeasurementById,
     getProductMeasures

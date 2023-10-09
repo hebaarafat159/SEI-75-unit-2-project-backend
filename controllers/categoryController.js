@@ -13,15 +13,35 @@ export default {
 }
 
 /**
+ * form the request response in each cases success and error
+ * @param {*} res 
+ * @param {*} status // 200 for success , any error status
+ * @param {*} body // requested data in case of success and "null" if the request failed
+ * @param {*} message // error message or success message
+ */
+function retrunResponse(status, body, message){
+    return {
+        status: status,
+        body: body,
+        message: message
+    };
+}
+
+/**
  * get all categories from database
  * @param {*} req 
  * @param {*} res 
  * @returns 
  */
 async function getCategories(req,res){
-    const filter = {"isSubCategory":false};
-    let categories = await Category.find(filter)
-    return res.json(categories);
+    try{
+        const filter = {"isSubCategory":false};
+        let categories = await Category.find(filter)
+        res.send(retrunResponse(200,categories,''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    }
 }
 
 async function getCategoryObject(catId){
@@ -37,7 +57,12 @@ async function getCategoryObject(catId){
  * @returns 
  */
 async function getCategoryById(req,res){
-     res.json(await getCategoryObject(req.params.id));
+    try{
+        res.send(retrunResponse(200,await getCategoryObject(req.params.id),''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    }
 }
 
 /**
@@ -48,20 +73,25 @@ async function getCategoryById(req,res){
  * @param {*} res 
  */
 async function getContent(req,res){
-    const category_id = req.params.id;
-    const filter = {$and: [{"parent_cat":{$eq: `${category_id}`} },
-                            {"isSubCategory":{$eq:  true} } ] }
-    
-    let categories = await Category.find(filter);
-    console.log(`Sub Category : ${JSON.stringify(categories)}`);
-    
-    // returen subcategories for a category
-    if(categories.length > 0 ){
-        return res.json(categories);
-    }// case of load category's products list
-    else{
-        console.log(`Get Conetnt Products ........`);
-        return  productController.getProductsOfCategory(req,res);
+    try{
+        const category_id = req.params.id;
+        const filter = {$and: [{"parent_cat":{$eq: `${category_id}`} },
+                                {"isSubCategory":{$eq:  true} } ] }
+        
+        let categories = await Category.find(filter);
+        console.log(`Sub Category : ${JSON.stringify(categories)}`);
+        
+        // returen subcategories for a category
+        if(categories.length > 0 ){
+            res.send(retrunResponse(200,categories,''));
+        }// case of load category's products list
+        else{
+            console.log(`Get Conetnt Products ........`);
+            res.send(retrunResponse(200,productController.getProductsOfCategory(req,res),''));
+        }
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
     }
 }
 
@@ -72,8 +102,13 @@ async function getContent(req,res){
  * @returns 
  */
 async function getAllSubCategories(req,res){
-    const filter = {"isSubCategory":true};
-    let categories = await Category.find(filter)
-    return res.json(categories);
+    try{
+        const filter = {"isSubCategory":true};
+        let categories = await Category.find(filter)
+        res.send(retrunResponse(200,categories,''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    }
 }
 
