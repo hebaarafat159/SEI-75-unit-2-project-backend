@@ -22,10 +22,18 @@ categoryRouter.get('/:id',async (req,res)=>{
 })
 
 /**
- * 
+ * return a category content , either a subcategories list or products list
  */
 categoryRouter.get('/:id/content',async (req,res)=>{
     categoryController.getContent(req,res);
 })
+
+/**
+ * return all subcategory list
+ */
+categoryRouter.get('/subcategories',async (req,res)=>{
+    categoryController.getAllSubCategories(req,res);
+})
+
 
 export default categoryRouter;

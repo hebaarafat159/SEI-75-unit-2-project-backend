@@ -7,7 +7,7 @@ const listItemSchema = new Schema({
         required: true,
         ref: 'Product'
     },
-    quantity:{type: Double, required: true},
+    quantity:{type: Number, required: true, default:1},
     measure:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,

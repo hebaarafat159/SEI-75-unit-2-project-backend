@@ -8,7 +8,8 @@ const categorySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Category'
-    }
+    },
+    isSubCategory: {type: Boolean,default : false}
 });
 
 export default mongoose.model('categories', categorySchema);
