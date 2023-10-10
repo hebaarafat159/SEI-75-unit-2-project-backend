@@ -9,7 +9,8 @@ export default {
     getCategories,
     getCategoryById,
     getContent,
-    getAllSubCategories
+    getAllSubCategories,
+    getAllProducts
 }
 
 /**
@@ -103,9 +104,22 @@ async function getContent(req,res){
  */
 async function getAllSubCategories(req,res){
     try{
-        const filter = {"isSubCategory":true};
-        let categories = await Category.find(filter)
+        console.log(`Category Id = ${req.params.id}`)
+        const filter = {$and: [{"parent_cat":{$eq: `${req.params.id}`} },
+                                {"isSubCategory":{$eq:  true} } ] }
+        let categories = await Category.find(filter);
+        console.log(`Category Sub = ${JSON.stringify(categories)}`)
         res.send(retrunResponse(200,categories,''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    }
+}
+
+async function getAllProducts(){
+    try{
+        console.log(`Get Conetnt Products ........`);
+        res.send(retrunResponse(200,productController.getProductsOfCategory(req,res),''));
     }catch(error){
         console.log("Error" + error); 
         res.send(retrunResponse(error.code, null, error.name));

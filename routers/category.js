@@ -29,10 +29,20 @@ categoryRouter.get('/:id/content',async (req,res)=>{
 })
 
 /**
- * return all subcategory list
+ * return all subcategory list for a category
  */
-categoryRouter.get('/subcategories',async (req,res)=>{
-    categoryController.getAllSubCategories(req,res);
+categoryRouter.get('/:id/subcategories',async (req,res)=>{
+    console.log(`path of : /:id/subcategories `)
+    categoryController.getContent(req,res);
+    // categoryController.getAllSubCategories(req,res);
+})
+
+/**
+ * return all products list for a category
+ */
+categoryRouter.get('/:id/products',async (req,res)=>{
+    console.log(`path of : /:id/products `)
+    categoryController.getAllProducts(req,res);
 })
 
 
