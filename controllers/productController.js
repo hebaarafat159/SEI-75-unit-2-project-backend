@@ -15,6 +15,22 @@ export default {
     getProductMeasures
 }
 
+
+/**
+ * form the request response in each cases success and error
+ * @param {*} res 
+ * @param {*} status // 200 for success , any error status
+ * @param {*} body // requested data in case of success and "null" if the request failed
+ * @param {*} message // error message or success message
+ */
+function retrunResponse(status, body, message){
+    return {
+        status: status,
+        body: body,
+        message: message
+    };
+}
+
 /**  Products Queries */
 
 /**
@@ -24,13 +40,27 @@ export default {
  * @returns 
  */
 async function getProducts(req,res){
-    const filter = {};
-    let products = await Product.find(filter)
-    return res.json(products);
+    try{
+        const filter = {};
+        let products = await Product.find(filter)
+        res.send(retrunResponse(200,products,''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
 }
 
 async function getProductById(req,res){
-    return (await res.json(getProductObject(req.params.id)))
+    try{
+        const filter = {};
+        let products = await Product.find(filter)
+        const productObj = await res.json(getProductObject(req.params.id));
+        res.send(retrunResponse(200,productObj,''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
+   
 }
 
 /**
@@ -52,9 +82,15 @@ async function getProductObject(productId){
  * @returns 
  */
 async function getProductsOfCategory(req,res){
-    const filter = {"category_id": `${req.params.id}`};
-    let products = await Product.find(filter)
-    return res.json(products);
+    try{
+        const filter = {"category_id": `${req.params.id}`};
+        const products = await Product.find(filter)
+        res.send(retrunResponse(200,products,'products'));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
+   
 }
 
 /**  Measurements Queries */
@@ -66,9 +102,14 @@ async function getProductsOfCategory(req,res){
  * @returns 
  */
 async function getAllMeasures(req,res){
-    const filter = {};
-    let measures = await Measurement.find(filter)
-    return res.json(measures);
+    try{
+        const filter = {};
+        const measures = await Measurement.find(filter)
+        res.send(retrunResponse(200,measures,''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    }   
 }
 
 /**
@@ -78,9 +119,14 @@ async function getAllMeasures(req,res){
  * @returns 
  */
 async function getMeasurementById(req,res){
-    const filter = {"_id": `${req.params.id}`};
-    let measure = await Measurement.findOne(filter)
-    return res.json(measure);
+    try{
+        const filter = {"_id": `${req.params.id}`};
+        const measure = await Measurement.findOne(filter)
+        res.send(retrunResponse(200,measure,''));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
 }
 
 /**
@@ -90,17 +136,23 @@ async function getMeasurementById(req,res){
  */
 async function getProductMeasures(req, res){
  
-    const productObj = await getProductObject(req.params.productId);
-    console.log(`selected object : ${JSON.stringify(productObj)}`);
-    const list = productObj.measures;
-    console.log(`measures : ${list}`);
+    try{
+        const productObj = await getProductObject(req.params.productId);
+        console.log(`selected object : ${JSON.stringify(productObj)}`);
+        const list = productObj.measures;
+        console.log(`measures : ${list}`);
 
-    if(list!==undefined && list.length > 0){
-        const filter = {"_id": {$in: list}};
-        let measure = await Measurement.find(filter);
-        console.log(`measure object : ${JSON.stringify(measure)}`);
-        return res.json(measure);
-    }
+        if(list!==undefined && list.length > 0){
+            const filter = {"_id": {$in: list}};
+            let measure = await Measurement.find(filter);
+            console.log(`measure object : ${JSON.stringify(measure)}`);
+            res.send(retrunResponse(200,measure,''));
+        }
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
+   
 }
 
 // // get a book details

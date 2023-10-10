@@ -84,11 +84,11 @@ async function getContent(req,res){
         
         // returen subcategories for a category
         if(categories.length > 0 ){
-            res.send(retrunResponse(200,categories,''));
+            res.send(retrunResponse(200,categories,'subcategory'));
         }// case of load category's products list
         else{
             console.log(`Get Conetnt Products ........`);
-            res.send(retrunResponse(200,productController.getProductsOfCategory(req,res),''));
+            return await productController.getProductsOfCategory(req,res);
         }
     }catch(error){
         console.log("Error" + error); 
@@ -109,7 +109,7 @@ async function getAllSubCategories(req,res){
                                 {"isSubCategory":{$eq:  true} } ] }
         let categories = await Category.find(filter);
         console.log(`Category Sub = ${JSON.stringify(categories)}`)
-        res.send(retrunResponse(200,categories,''));
+        res.send(retrunResponse(200,categories,'subcategory'));
     }catch(error){
         console.log("Error" + error); 
         res.send(retrunResponse(error.code, null, error.name));
@@ -119,7 +119,7 @@ async function getAllSubCategories(req,res){
 async function getAllProducts(){
     try{
         console.log(`Get Conetnt Products ........`);
-        res.send(retrunResponse(200,productController.getProductsOfCategory(req,res),''));
+        res.send(retrunResponse(200,await productController.getProductsOfCategory(req,res),'products'));
     }catch(error){
         console.log("Error" + error); 
         res.send(retrunResponse(error.code, null, error.name));

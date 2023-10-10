@@ -32,9 +32,14 @@ function retrunResponse(status, body, message){
 /**  Shopping list Queries */
 
 async function getAllShoppingList(req, res){
-    const filter = {};
-    let list = await ShoppingList.find(filter)
-    return res.json(list);
+    try{
+        const filter = {};
+        let list = await ShoppingList.find(filter)
+        res.send(retrunResponse(200, list, ""));
+    }catch (error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    }
 }
 
 /**
@@ -44,10 +49,15 @@ async function getAllShoppingList(req, res){
  * @returns 
  */
 async function getUserShoppingList(req, res){
-    const userId = req.param.userId;
-    const filter = { "sharedWith.id": { "$in": [userId] } };
-    let list = await ShoppingList.find(filter)
-    return res.json(list);
+    try{
+        const userId = req.param.userId;
+        const filter = { "sharedWith.id": { "$in": [userId] } };
+        let list = await ShoppingList.find(filter)
+        res.send(retrunResponse(200, list, ""));
+    }catch (error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
 }
 
 /**
