@@ -8,7 +8,7 @@ import userController from '../controllers/userController.js'
 let userRouter = express.Router();
 
 // return all products list for a category
-userRouter.get('/login',async (req,res)=>{
+userRouter.post('/login',async (req,res)=>{
     // console.log("Start saving user data");
     await userController.saveUser(req, res);
 })

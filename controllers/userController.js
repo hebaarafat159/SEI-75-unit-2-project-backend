@@ -26,10 +26,12 @@ function retrunResponse(status, body, message){
 }
 
 async function saveUser(req,res){
-    const email = req.body.email;
-    const name = "Heba"//req.body.given_name;
+    // const userObject = req.body;
+    const userEmail = req.body.email;
+    const userName = req.body.given_name;
+    
+    // console.log(`User Object: ${name} : ${email}` );
     try{
-
         if(await User.count({"email": userEmail}) === 0){
             // save new user
             const newUser = new User({
@@ -56,8 +58,9 @@ async function saveUser(req,res){
     
 }
 
-async function getUser(userEmail){
+async function getUser(req,res){
     try{
+        const userEmail = req.body.email;
        // console.log(`User email = ${userEmail}`)
         const filter = {"email": `${userEmail}`};
         let userObject = null;
