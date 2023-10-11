@@ -66,6 +66,9 @@ listRouter.put('/:id/listItems/updateStatus',async (req,res)=>{
     shoppingListController.updateListItemStatus(req, res);
 });
 
+listRouter.get('/:id/count',async (req,res)=>{ 
+    shoppingListController.getShoppingListItemsCount(req, res);
+});
 
 
 export default listRouter;

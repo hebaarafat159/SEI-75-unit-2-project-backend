@@ -14,7 +14,8 @@ export default {
     addShoppingList,
     deleteProductFromShoppingList,
     getShoppingListItems,
-    updateListItemStatus
+    updateListItemStatus,
+    getShoppingListItemsCount
 }
 
 /**
@@ -321,4 +322,16 @@ async function updateListItemStatus(req,res){
         console.log("Error" + error); 
         return retrunResponse(error.code, null, error.name);
     }
+}
+
+async function getShoppingListItemsCount(req, res){
+    try{
+        const filter = {"list_id": req.params.id};
+        let count = await ListItem.count(filter);
+        console.log(`List count ::::: = count `);
+        res.send(retrunResponse(200, count, ""));
+    }catch (error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
 }
