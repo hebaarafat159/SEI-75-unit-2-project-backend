@@ -2,6 +2,23 @@ import 'dotenv/config';
 import mongoose, { Schema } from "mongoose";
 
 const listItemSchema = new Schema({
+    product:{
+        name:{type: String},
+        description:{type: String},
+        image:{type: String},
+        category_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            
+            ref: 'Category'
+        },
+        measures:[
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                
+                ref: 'Measurement'
+            }
+        ]
+    },
     product_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -12,6 +29,10 @@ const listItemSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Measurement'
+    },
+    measure: {
+        name:{type: String},
+        prefix_str:{type: String}
     },
     lastUpdatedDate: {
         type: Number,

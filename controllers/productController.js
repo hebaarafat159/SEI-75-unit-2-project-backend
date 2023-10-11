@@ -9,6 +9,7 @@ export default {
     getProducts,
     getProductsOfCategory,
     getProductById,
+    getProductObject,
 
     getAllMeasures,
     getMeasurementById,
@@ -53,7 +54,6 @@ async function getProducts(req,res){
 async function getProductById(req,res){
     try{
         const filter = {};
-        let products = await Product.find(filter)
         const productObj = await res.json(getProductObject(req.params.id));
         res.send(retrunResponse(200,productObj,''));
     }catch(error){

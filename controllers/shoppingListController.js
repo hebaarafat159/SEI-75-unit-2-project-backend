@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import ShoppingList from '../models/shoppingListModel.js';
 import ListItem from '../models/listItemModel.js';
+import productController from '../controllers/productController.js'
 
 mongoose.connect(`${process.env.DATABAE_URL}`);
 
@@ -11,7 +12,9 @@ export default {
     getUserShoppingList,
     addProductToShoppingList,
     addShoppingList,
-    deleteProductFromShoppingList
+    deleteProductFromShoppingList,
+    getShoppingListItems,
+    updateListItemStatus
 }
 
 /**
@@ -196,6 +199,24 @@ async function updateShoppingList(updatedList){
 /** List Item Queries */
 
 /**
+ * get all items of a shopping list from database
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+async function getShoppingListItems(req, res){
+    try{
+        const filter = {"list_id": req.params.id};
+        let list = await ListItem.find(filter);
+        console.log(`get list items ::::: = ${req.params.id} :: \n\n${JSON.stringify(list)}`);
+        res.send(retrunResponse(200, list, ""));
+    }catch (error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
+}
+
+/**
  * add product to a current selected shopping list
  * @param {*} req 
  * @param {*} res 
@@ -208,7 +229,9 @@ async function addProductToShoppingList(req, res){
         measure_id: req.body.measure_id,
         lastUpdatedDate: req.body.lastUpdatedDate,
         hasBrought:req.body.hasBrought,
-        list_id:req.body.list_id 
+        list_id:req.body.list_id,
+        measure: req.body.measure,
+        product: req.body.product, 
     }
     
     // get item list object if exsists 
@@ -232,7 +255,8 @@ async function addProductToShoppingList(req, res){
         // console.log(`Update item ---> ${item._id}`)
         item.measure_id = itlemObject.measure_id;
         item.quantity = itlemObject.quantity;
-        const response = await updateProductInShoppingList(item._id,item.measure_id,item.quantity);
+        item.measure = itlemObject.measure
+        const response = await updateProductInShoppingList(item._id,item.measure_id,item.measure,item.quantity);
         // console.log(`\n \n \n Updated Item in List respond :::::: ${JSON.stringify(response)}`);
         res.send(response);
     }
@@ -244,13 +268,13 @@ async function addProductToShoppingList(req, res){
  * @param {*} quantity 
  * @returns 
  */
-async function updateProductInShoppingList(itemId,measureId, quantity){
+async function updateProductInShoppingList(itemId,measureId,measure, quantity){
     const lastUpdatedDate = new Date().getTime();
     // console.log(`****** list item object: ${quantity} ------ 
     // Updated shopping list time : ${lastUpdatedDate}`);
     try{
         const itemList = await ListItem.findOneAndUpdate({"_id": itemId},
-        {"measure_id": measureId, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity})
+        {"measure_id": measureId,"measure": measure, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity})
     
         // console.log(JSON.stringify(itemList));
         return retrunResponse(200, itemList, "");
@@ -273,5 +297,27 @@ async function deleteProductFromShoppingList(req,res){
     }catch(error) {
         console.log("Error" + error); 
         res.send(retrunResponse(error.code, null, error.name));
+    }
+}
+
+/**
+ * change item list status (has been brought or not )
+ * @param {*} itemId 
+ * @param {*} status 
+ * @returns 
+ */
+async function updateListItemStatus(req,res){
+    const lastUpdatedDate = new Date().getTime();
+    // console.log(`******Updated status list item object: ${req.body.hasBrought} ------ ${req.body._id}  
+    // Updated shopping list time : ${lastUpdatedDate}`);
+    try{
+        const itemList = await ListItem.findOneAndUpdate({"_id": req.body._id}, 
+        {"hasBrought":req.body.hasBrought, "lastUpdatedDate":lastUpdatedDate})
+    
+        // console.log(JSON.stringify(itemList));
+        return retrunResponse(200, itemList, "");
+    }catch(error) {
+        console.log("Error" + error); 
+        return retrunResponse(error.code, null, error.name);
     }
 }
