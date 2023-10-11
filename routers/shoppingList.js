@@ -10,10 +10,6 @@ let listRouter = express.Router();
 // return all products list for a category
 listRouter.get('/',async (req,res)=>{
     shoppingListController.getAllShoppingList(req,res);
-    // TODO remove testing this code
-    // shoppingListController.addShoppingList(req,res);
-    shoppingListController.addProductToShoppingList(req,res);
-    //TODO End testing code //////// 
 })
 
 
@@ -34,5 +30,11 @@ listRouter.post('add/:id',async (req,res)=>{
 listRouter.post('/:id/listItem/add',async (req,res)=>{ 
     console.log(`add List Item = ${JSON.stringify(req.params.id)}`)
     shoppingListController.addProductToShoppingList(req, res);
+});
+
+
+listRouter.delete('/:id/listItem/delete',async (req,res)=>{ 
+    console.log(`delete List Item = ${JSON.stringify(req.params.id)}`)
+    shoppingListController.deleteProductFromShoppingList(req, res);
 });
 export default listRouter;

@@ -10,7 +10,8 @@ export default {
     getAllShoppingList,
     getUserShoppingList,
     addProductToShoppingList,
-    addShoppingList
+    addShoppingList,
+    deleteProductFromShoppingList
 }
 
 /**
@@ -200,38 +201,26 @@ async function updateShoppingList(updatedList){
  * @param {*} res 
  */
 async function addProductToShoppingList(req, res){
-
-    // TODO remove test object
-    const itemId = '65241633ecbc65c4e3ac447c' 
     const itlemObject = {
-        product_id: '6521bb2ff39360ef56c544f2',
-        quantity:3,
-        measure_id:'6521bc7cf39360ef56c544f6',
-        lastUpdatedDate: new Date().getTime(),
-        hasBrought:false,
-        list_id:'6523ec21549acd91ef6ac71a'
+        item_id: req.body.item_id,
+        product_id: req.body.product_id,
+        quantity: req.body.quantity,
+        measure_id: req.body.measure_id,
+        lastUpdatedDate: req.body.lastUpdatedDate,
+        hasBrought:req.body.hasBrought,
+        list_id:req.body.list_id 
     }
-    // TODO End test object 
     
-
     // get item list object if exsists 
-    const item = await ListItem.findOne({"_id":itemId});
-    console.log(`adding .... item   : ${JSON.stringify(item)}` );
+    const item = await ListItem.findOne({"_id":itlemObject.item_id});
+    // console.log(`adding .... item   : ${JSON.stringify(item)}` );
     if(item === null ){
-        const listItem = new ListItem({
-            product_id: itlemObject.product_id,
-            quantity: itlemObject.quantity,
-            measure_id: itlemObject.measure_id,
-            lastUpdatedDate: new Date().getTime(),
-            hasBrought:false,
-            list_id: itlemObject.list_id
-        });
-        
+        const listItem = new ListItem(itlemObject)
         try{
 
             // save new list item on database
             await listItem.save()
-             // TODO handle adding item to shopping list items array
+             // TODO handle adding item id to shopping list items array
             res.send(retrunResponse(200, listItem, ""));
             
         }catch(error) {
@@ -240,9 +229,12 @@ async function addProductToShoppingList(req, res){
         };
     }else{
         // TODO update object with new values 
-        console.log(`Update item ---> ${item._id}`)
-        item.quantity = 34;
-        updateProductInShoppingList(item._id,item.measure_id,item.quantity);
+        // console.log(`Update item ---> ${item._id}`)
+        item.measure_id = itlemObject.measure_id;
+        item.quantity = itlemObject.quantity;
+        const response = await updateProductInShoppingList(item._id,item.measure_id,item.quantity);
+        // console.log(`\n \n \n Updated Item in List respond :::::: ${JSON.stringify(response)}`);
+        res.send(response);
     }
 }
 
@@ -254,8 +246,8 @@ async function addProductToShoppingList(req, res){
  */
 async function updateProductInShoppingList(itemId,measureId, quantity){
     const lastUpdatedDate = new Date().getTime();
-    console.log(`****** list item object: ${quantity} ------ 
-    Updated shopping list time : ${lastUpdatedDate}`);
+    // console.log(`****** list item object: ${quantity} ------ 
+    // Updated shopping list time : ${lastUpdatedDate}`);
     try{
         const itemList = await ListItem.findOneAndUpdate({"_id": itemId},
         {"measure_id": measureId, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity})
@@ -274,14 +266,12 @@ async function updateProductInShoppingList(itemId,measureId, quantity){
  * @param {*} itemId 
  * @returns 
  */
-async function deleteProductFromShoppingList(listId,itemId){
+async function deleteProductFromShoppingList(req,res){
     try{
-        const item = await ListItem.findOneAndUpdate({"_id": itemId},{"list_id": listId})
-    
-        // console.log(JSON.stringify(itemList));
-        return retrunResponse(200, null, "");
+        await ListItem.findOneAndDelete({"_id": req.body.item_id},{"list_id": req.body.list_id})
+        res.send(retrunResponse(200, null, ""));
     }catch(error) {
         console.log("Error" + error); 
-        return retrunResponse(error.code, null, error.name);
+        res.send(retrunResponse(error.code, null, error.name));
     }
 }
