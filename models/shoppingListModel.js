@@ -18,10 +18,10 @@ const shoppingListSchema = new Schema({
     },
     sharedWith:[
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Customer'
+            type: String
         }
     ],
+    isSelected:{type: Boolean, required: true}
 });
 
 export default mongoose.model('ShoppingLists', shoppingListSchema);

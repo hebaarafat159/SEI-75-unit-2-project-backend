@@ -54,9 +54,10 @@ async function getAllShoppingList(req, res){
  */
 async function getUserShoppingList(req, res){
     try{
-        const userId = req.param.userId;
-        const filter = { "sharedWith.id": { "$in": [userId] } };
+        // console.log(`Get User Lits :::: ${req.params.userId}`)
+        const filter = { "sharedWith":  req.params.userId  };
         let list = await ShoppingList.find(filter)
+        // console.log(`Get User Lits :::: ${req.params.userId} :::: ${JSON.stringify(list)}`)
         res.send(retrunResponse(200, list, ""));
     }catch (error){
         console.log("Error" + error); 
