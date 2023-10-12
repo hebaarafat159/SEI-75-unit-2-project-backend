@@ -7,7 +7,7 @@ const categorySchema = new Schema({
     parent_cat: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Category'
+        ref: 'categories'
     },
     isSubCategory: {type: Boolean,default : false}
 });

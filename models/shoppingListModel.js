@@ -7,7 +7,7 @@ const shoppingListSchema = new Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'ListItem'
+            ref: 'listItem'
         }
     ],
     lastUpdatedDate: {
@@ -18,7 +18,9 @@ const shoppingListSchema = new Schema({
     },
     sharedWith:[
         {
-            type: String
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'customers'
         }
     ],
     isSelected:{type: Boolean, required: true}

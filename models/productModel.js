@@ -8,13 +8,13 @@ const productSchema = new Schema({
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Category'
+        ref: 'categories'
     },
     measures:[
         {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'Measurement'
+            ref: 'measurements'
         }
     ]
 });

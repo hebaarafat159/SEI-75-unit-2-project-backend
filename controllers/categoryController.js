@@ -37,7 +37,7 @@ function retrunResponse(status, body, message){
 async function getCategories(req,res){
     try{
         const filter = {"isSubCategory":false};
-        let categories = await Category.find(filter)
+        let categories = await Category.find(filter).populate("parent_cat");
         res.send(retrunResponse(200,categories,''));
     }catch(error){
         console.log("Error" + error); 
@@ -47,7 +47,7 @@ async function getCategories(req,res){
 
 async function getCategoryObject(catId){
     const filter = {_id: `${catId}`};
-    let category = await Category.findOne(filter)
+    let category = await Category.findOne(filter).populate("parent_cat");
     return category;
 }
 
@@ -79,7 +79,7 @@ async function getContent(req,res){
         const filter = {$and: [{"parent_cat":{$eq: `${category_id}`} },
                                 {"isSubCategory":{$eq:  true} } ] }
         
-        let categories = await Category.find(filter);
+        let categories = await Category.find(filter).populate("parent_cat");
         console.log(`Sub Category : ${JSON.stringify(categories)}`);
         
         // returen subcategories for a category
@@ -107,7 +107,7 @@ async function getAllSubCategories(req,res){
         console.log(`Category Id = ${req.params.id}`)
         const filter = {$and: [{"parent_cat":{$eq: `${req.params.id}`} },
                                 {"isSubCategory":{$eq:  true} } ] }
-        let categories = await Category.find(filter);
+        let categories = await Category.find(filter).populate("parent_cat");
         console.log(`Category Sub = ${JSON.stringify(categories)}`)
         res.send(retrunResponse(200,categories,'subcategory'));
     }catch(error){

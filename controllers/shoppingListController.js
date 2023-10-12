@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 
 import ShoppingList from '../models/shoppingListModel.js';
 import ListItem from '../models/listItemModel.js';
-import productController from '../controllers/productController.js'
 
 mongoose.connect(`${process.env.DATABAE_URL}`);
 
@@ -39,7 +38,7 @@ function retrunResponse(status, body, message){
 async function getAllShoppingList(req, res){
     try{
         const filter = {};
-        let list = await ShoppingList.find(filter)
+        let list = await ShoppingList.find(filter).populate(["listItems","sharedWith"]);
         res.send(retrunResponse(200, list, ""));
     }catch (error){
         console.log("Error" + error); 
@@ -57,7 +56,7 @@ async function getUserShoppingList(req, res){
     try{
         // console.log(`Get User Lits :::: ${req.params.userId}`)
         const filter = { "sharedWith":  req.params.userId  };
-        let list = await ShoppingList.find(filter)
+        let list = await ShoppingList.find(filter).populate(["listItems","sharedWith"]);
         // console.log(`Get User Lits :::: ${req.params.userId} :::: ${JSON.stringify(list)}`)
         res.send(retrunResponse(200, list, ""));
     }catch (error){
@@ -77,7 +76,7 @@ async function addShoppingList(req,res){
 
     // TODO end Test code ///
 
-    const list = await ShoppingList.findOne({"name":listName});
+    const list = await ShoppingList.findOne({"name":listName}).populate(["listItems","sharedWith"]);
     console.log(`Default List : ${JSON.stringify(list)}` );
     if(list === null ){
         const newList = new ShoppingList({
@@ -112,7 +111,7 @@ async function  updateShoppingItemsArray(forAdding, listId, listItemId)
 {
     try{
         // get shopping list object
-        const listObject = await ShoppingList.findOne({"_id":listId});
+        const listObject = await ShoppingList.findOne({"_id":listId}).populate(["listItems","sharedWith"]);
         console.log(`Updating .... List    : ${JSON.stringify(listObject)}` );
         if(forAdding)
         {
@@ -141,7 +140,7 @@ async function  updateShoppingListUsers(forAdding, listId, userId)
 {
     try{
         // get shopping list object
-        const listObject = await ShoppingList.findOne({"_id":listId});
+        const listObject = await ShoppingList.findOne({"_id":listId}).populate(["listItems","sharedWith"]);
         console.log(`Updating .... List    : ${JSON.stringify(listObject)}` );
         if(forAdding)
         {
@@ -187,7 +186,7 @@ async function deleteShoppingList(listId){
 async function updateShoppingList(updatedList){
     updatedList.lastUpdatedDate = new Date().getTime();
     console.log(`****** Object: ${JSON.stringify(updatedList)} ------ Updated shopping list time : ${updatedList.lastUpdatedDate}`);
-    await ShoppingList.findOneAndUpdate({"_id": updatedList._id},updatedList)
+    await ShoppingList.findOneAndUpdate({"_id": updatedList._id},updatedList).populate(["listItems","sharedWith"])
     .then((updatedList) => {
         console.log(JSON.stringify(updatedList));
         return retrunResponse(200, updatedList, "");
@@ -209,7 +208,7 @@ async function updateShoppingList(updatedList){
 async function getShoppingListItems(req, res){
     try{
         const filter = {"list_id": req.params.id};
-        let list = await ListItem.find(filter);
+        let list = await ListItem.find(filter).populate(["product_id","list_id","measure_id"]);
         console.log(`get list items ::::: = ${req.params.id} :: \n\n${JSON.stringify(list)}`);
         res.send(retrunResponse(200, list, ""));
     }catch (error){
@@ -231,13 +230,11 @@ async function addProductToShoppingList(req, res){
         measure_id: req.body.measure_id,
         lastUpdatedDate: req.body.lastUpdatedDate,
         hasBrought:req.body.hasBrought,
-        list_id:req.body.list_id,
-        measure: req.body.measure,
-        product: req.body.product, 
+        list_id:req.body.list_id
     }
     
     // get item list object if exsists 
-    const item = await ListItem.findOne({"_id":itlemObject.item_id});
+    const item = await ListItem.findOne({"_id":itlemObject.item_id}).populate(["product_id","list_id","measure_id"]);
     // console.log(`adding .... item   : ${JSON.stringify(item)}` );
     if(item === null ){
         const listItem = new ListItem(itlemObject)
@@ -276,7 +273,7 @@ async function updateProductInShoppingList(itemId,measureId,measure, quantity){
     // Updated shopping list time : ${lastUpdatedDate}`);
     try{
         const itemList = await ListItem.findOneAndUpdate({"_id": itemId},
-        {"measure_id": measureId,"measure": measure, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity})
+        {"measure_id": measureId,"measure": measure, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity}).populate(["product_id","list_id","measure_id"])
     
         // console.log(JSON.stringify(itemList));
         return retrunResponse(200, itemList, "");
@@ -294,7 +291,7 @@ async function updateProductInShoppingList(itemId,measureId,measure, quantity){
  */
 async function deleteProductFromShoppingList(req,res){
     try{
-        await ListItem.findOneAndDelete({"_id": req.body.item_id},{"list_id": req.body.list_id})
+        await ListItem.findOneAndDelete({"_id": req.body.item_id},{"list_id": req.body.list_id}).populate(["product_id","list_id","measure_id"])
         res.send(retrunResponse(200, null, ""));
     }catch(error) {
         console.log("Error" + error); 
@@ -314,7 +311,7 @@ async function updateListItemStatus(req,res){
     // Updated shopping list time : ${lastUpdatedDate}`);
     try{
         const itemList = await ListItem.findOneAndUpdate({"_id": req.body._id}, 
-        {"hasBrought":req.body.hasBrought, "lastUpdatedDate":lastUpdatedDate})
+        {"hasBrought":req.body.hasBrought, "lastUpdatedDate":lastUpdatedDate}).populate(["product_id","list_id","measure_id"])
     
         // console.log(JSON.stringify(itemList));
         return retrunResponse(200, itemList, "");
