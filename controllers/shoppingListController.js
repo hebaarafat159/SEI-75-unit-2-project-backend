@@ -223,42 +223,35 @@ async function getShoppingListItems(req, res){
  * @param {*} res 
  */
 async function addProductToShoppingList(req, res){
-    const itlemObject = {
-        item_id: req.body.item_id,
-        product_id: req.body.product_id,
-        quantity: req.body.quantity,
-        measure_id: req.body.measure_id,
-        lastUpdatedDate: req.body.lastUpdatedDate,
-        hasBrought:req.body.hasBrought,
-        list_id:req.body.list_id
-    }
-    
-    // get item list object if exsists 
-    const item = await ListItem.findOne({"_id":itlemObject.item_id}).populate(["product_id","list_id","measure_id"]);
-    // console.log(`adding .... item   : ${JSON.stringify(item)}` );
-    if(item === null ){
-        const listItem = new ListItem(itlemObject)
+    let id = req.body._id;
+    let item = null; 
+    if(id === '-1')
+    { 
+        item = new ListItem(
+        {
+                product_id: req.body.productObj._id,
+                quantity: req.body.quantity,
+                measure_id: req.body.selectedMeasure._id,
+                lastUpdatedDate: new Date().getTime(),
+                hasBrought:req.body.status,
+                list_id: req.params.id
+        });
         try{
-
             // save new list item on database
-            await listItem.save()
+            await item.save();
              // TODO handle adding item id to shopping list items array
-            res.send(retrunResponse(200, listItem, ""));
+            res.send(retrunResponse(200, item, ""));
             
         }catch(error) {
             console.log(error);
             res.send(retrunResponse(error.code, null, error.name));
         };
-    }else{
-        // TODO update object with new values 
-        // console.log(`Update item ---> ${item._id}`)
-        item.measure_id = itlemObject.measure_id;
-        item.quantity = itlemObject.quantity;
-        item.measure = itlemObject.measure
-        const response = await updateProductInShoppingList(item._id,item.measure_id,item.measure,item.quantity);
-        // console.log(`\n \n \n Updated Item in List respond :::::: ${JSON.stringify(response)}`);
+    } else{
+        // get item list object if exsists 
+        //item = await ListItem.findOne({"_id":id})//.populate(["product_id","list_id","measure_id"]);
+        const response = await updateProductInShoppingList(req.body._id,req.body.selectedMeasure._id,req.body.quantity,req.body.status);
         res.send(response);
-    }
+    }   
 }
 
 /**
@@ -267,13 +260,13 @@ async function addProductToShoppingList(req, res){
  * @param {*} quantity 
  * @returns 
  */
-async function updateProductInShoppingList(itemId,measureId,measure, quantity){
+async function updateProductInShoppingList(itemId,measureId, quantity, status){
     const lastUpdatedDate = new Date().getTime();
     // console.log(`****** list item object: ${quantity} ------ 
     // Updated shopping list time : ${lastUpdatedDate}`);
     try{
         const itemList = await ListItem.findOneAndUpdate({"_id": itemId},
-        {"measure_id": measureId,"measure": measure, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity}).populate(["product_id","list_id","measure_id"])
+        {"measure_id": measureId, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity,"hasBrought":status}).populate(["product_id","list_id","measure_id"])
     
         // console.log(JSON.stringify(itemList));
         return retrunResponse(200, itemList, "");
@@ -290,9 +283,12 @@ async function updateProductInShoppingList(itemId,measureId,measure, quantity){
  * @returns 
  */
 async function deleteProductFromShoppingList(req,res){
-    try{
-        await ListItem.findOneAndDelete({"_id": req.body.item_id},{"list_id": req.body.list_id}).populate(["product_id","list_id","measure_id"])
-        res.send(retrunResponse(200, null, ""));
+    try{ 
+        if(req.body._id !== '-1')
+        { 
+            await ListItem.findOneAndDelete({"_id": req.body._id},{"list_id": req.params.id})
+            res.send(retrunResponse(200, null, ""));
+        }
     }catch(error) {
         console.log("Error" + error); 
         res.send(retrunResponse(error.code, null, error.name));
@@ -310,14 +306,15 @@ async function updateListItemStatus(req,res){
     // console.log(`******Updated status list item object: ${req.body.hasBrought} ------ ${req.body._id}  
     // Updated shopping list time : ${lastUpdatedDate}`);
     try{
-        const itemList = await ListItem.findOneAndUpdate({"_id": req.body._id}, 
-        {"hasBrought":req.body.hasBrought, "lastUpdatedDate":lastUpdatedDate}).populate(["product_id","list_id","measure_id"])
-    
-        // console.log(JSON.stringify(itemList));
-        return retrunResponse(200, itemList, "");
+        let id = req.body._id;
+        if(id === '-1')
+        { 
+            const response = await updateProductInShoppingList(req.body._id,req.body.selectedMeasure._id,req.body.quantity,req.body.status);
+            res.send(response);
+        }
     }catch(error) {
         console.log("Error" + error); 
-        return retrunResponse(error.code, null, error.name);
+        res.send(retrunResponse(error.code, null, error.name));
     }
 }
 
