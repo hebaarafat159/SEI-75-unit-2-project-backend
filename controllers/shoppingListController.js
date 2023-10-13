@@ -116,7 +116,8 @@ async function  updateShoppingItemsArray(forAdding, listId, listItemId)
         if(forAdding)
         {
             // add item to shopping list items array
-            listObject.listItems.push(listItemId);
+            if(!listObject.listItems.includes(listItemId))
+                listObject.listItems.push(listItemId);
         }else{
             //TODO handle remove item list from array
         }
@@ -240,6 +241,7 @@ async function addProductToShoppingList(req, res){
             // save new list item on database
             await item.save();
              // TODO handle adding item id to shopping list items array
+            await updateShoppingItemsArray (true, item.list_id, item._id);
             res.send(retrunResponse(200, item, ""));
             
         }catch(error) {

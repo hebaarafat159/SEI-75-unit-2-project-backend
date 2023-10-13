@@ -18,9 +18,9 @@ const shoppingListSchema = new Schema({
     },
     sharedWith:[
         {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: 'customers'
+            type: String
+            // required: true,
+            // ref: 'customers'
         }
     ],
     isSelected:{type: Boolean, required: true}

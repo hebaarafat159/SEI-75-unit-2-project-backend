@@ -28,7 +28,7 @@ function retrunResponse(status, body, message){
 async function saveUser(req,res){
     // const userObject = req.body;
     const userEmail = req.body.email;
-    const userName = req.body.given_name;
+    const userName = req.body.name;
     
     // console.log(`User Object: ${name} : ${email}` );
     try{
@@ -55,7 +55,6 @@ async function saveUser(req,res){
         console.log("Error" + error); 
         res.send(retrunResponse(error.code, null, error.name));
     }
-    
 }
 
 async function getUser(req,res){
