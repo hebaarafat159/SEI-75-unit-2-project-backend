@@ -58,7 +58,6 @@ listRouter.delete('/:id/listItems/delete',async (req,res)=>{
     shoppingListController.deleteProductFromShoppingList(req, res);
 });
 
-
 /**
  * detelet item from a list
  * */
@@ -70,5 +69,11 @@ listRouter.get('/:id/count',async (req,res)=>{
     shoppingListController.getShoppingListItemsCount(req, res);
 });
 
+/**
+ * add list item to specific shopping list
+ */
+listRouter.put('/:id/share',async (req,res)=>{ 
+    shoppingListController.updateShoppingListUsers(req, res);
+});
 
 export default listRouter;

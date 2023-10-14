@@ -14,7 +14,8 @@ export default {
     deleteProductFromShoppingList,
     getShoppingListItems,
     updateListItemStatus,
-    getShoppingListItemsCount
+    getShoppingListItemsCount,
+    updateShoppingListUsers
 }
 
 /**
@@ -131,35 +132,6 @@ async function  updateShoppingItemsArray(forAdding, listId, listItemId)
 }
 
 /**
- * add user id to sharing list array in a list
- * @param {*} forAdding 
- * @param {*} listId 
- * @param {*} userId 
- * @returns 
- */
-async function  updateShoppingListUsers(forAdding, listId, userId)
-{
-    try{
-        // get shopping list object
-        const listObject = await ShoppingList.findOne({"_id":listId}).populate(["listItems","sharedWith"]);
-        console.log(`Updating .... List    : ${JSON.stringify(listObject)}` );
-        if(forAdding)
-        {
-            // add user to shopping list items array
-            listObject.sharedWith.push(userId);
-        }else{
-            //TODO handle remove user from array
-        }
-        // update shopping list 
-        await updateShoppingList(listObject);
-    }catch(error){
-        console.log("Error" + error); 
-        return retrunResponse( error.code, null, error.name);
-    }
-    
-}
-
-/**
  * delete shopping list and it's items 
  * @param {*} listId 
  * @returns 
@@ -240,7 +212,6 @@ async function addProductToShoppingList(req, res){
         try{
             // save new list item on database
             await item.save();
-             // TODO handle adding item id to shopping list items array
             await updateShoppingItemsArray (true, item.list_id, item._id);
             res.send(retrunResponse(200, item, ""));
             
@@ -312,7 +283,7 @@ async function updateListItemStatus(req,res){
         if(id === '-1')
         { 
             const response = await updateProductInShoppingList(req.body._id,req.body.selectedMeasure._id,req.body.quantity,req.body.status);
-            res.send(response);
+            res.send(retrunResponse(200,response,''));
         }
     }catch(error) {
         console.log("Error" + error); 
@@ -330,4 +301,32 @@ async function getShoppingListItemsCount(req, res){
         console.log("Error" + error); 
         res.send(retrunResponse(error.code, null, error.name));
     } 
+}
+
+/**
+ * add user id to sharing list array in a list
+* @returns 
+ */
+async function updateShoppingListUsers(req,res)
+{
+    console.log(`share List Item = ${JSON.stringify(req.params.id)}`)
+    try{
+        // get shopping list object
+        let listObject = await ShoppingList.findOne({"_id":req.params.id})
+        console.log(`Share with .... List  ${req.body} :::: ${JSON.stringify(listObject)}` );
+        const userId = req.body.sharedEmail;
+        // add user to shopping list items array
+        if(!listObject.sharedWith.includes(userId))
+        {
+            listObject.sharedWith.push(userId);
+            console.log(`Share list Updated : ${listObject.sharedWith}`);
+            listObject = await ShoppingList.findOneAndUpdate({"_id":req.params.id},{"sharedWith": listObject.sharedWith}).populate(["listItems","sharedWith"]);
+        }
+
+        res.send(retrunResponse(200, listObject,""));
+    }catch(error){
+        console.log("Error" + error); 
+        res.send(retrunResponse( error.code, null, error.name));
+    }
+    
 }
