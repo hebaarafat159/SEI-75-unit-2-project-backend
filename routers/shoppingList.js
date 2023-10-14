@@ -76,4 +76,12 @@ listRouter.put('/:id/share',async (req,res)=>{
     shoppingListController.updateShoppingListUsers(req, res);
 });
 
+/**
+ * get an items in a list
+ */
+listRouter.get('/:id/listItems/:itemId',async (req,res)=>{ 
+    shoppingListController.getListItemByName(req, res);
+});
+
+
 export default listRouter;

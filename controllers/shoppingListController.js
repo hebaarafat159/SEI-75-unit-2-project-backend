@@ -15,7 +15,8 @@ export default {
     getShoppingListItems,
     updateListItemStatus,
     getShoppingListItemsCount,
-    updateShoppingListUsers
+    updateShoppingListUsers,
+    getListItemByName
 }
 
 /**
@@ -329,4 +330,17 @@ async function updateShoppingListUsers(req,res)
         res.send(retrunResponse( error.code, null, error.name));
     }
     
+}
+
+async function getListItemByName(req,res){
+    try{
+        console.log(`get list item banana object ::::: = ${req.params.id} :: ${req.params.itemId}}`);
+        
+        const filter = {"list_id": req.params.id,"product_id":req.params.itemId};
+        let item = await ListItem.findOne(filter).populate(["product_id","product_id.measures","list_id","measure_id"]);
+        res.send(retrunResponse(200, item, ""));
+    }catch (error){
+        console.log("Error" + error); 
+        res.send(retrunResponse(error.code, null, error.name));
+    } 
 }
