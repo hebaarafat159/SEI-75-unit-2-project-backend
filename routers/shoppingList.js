@@ -25,12 +25,9 @@ listRouter.get('/:userId',async (req,res)=>{
 /**
  * save new shopping list
  */
-listRouter.post('add/:id',async (req,res)=>{
-    console.log(`add Shopping List = ${JSON.stringify(req.params.id)}`)
+listRouter.post('/add/:userId',async (req,res)=>{
     shoppingListController.addShoppingList(req,res);
 })
-
-
 
 /**  items in a lists routes  */
 

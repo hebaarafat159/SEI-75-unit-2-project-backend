@@ -73,19 +73,19 @@ async function getUserShoppingList(req, res){
  * @param {*} res 
  */
 async function addShoppingList(req,res){
-    // TODO remove test data
-    const listName = 'defaultList';//req.body.name;
-
-    // TODO end Test code ///
-
+    console.log(`add Shopping List = ${JSON.stringify(req.params.userId)}`)
+    const userEmail = req.params.userId;
+    const listName = req.body.listName;
     const list = await ShoppingList.findOne({"name":listName}).populate(["listItems","sharedWith"]);
-    console.log(`Default List : ${JSON.stringify(list)}` );
     if(list === null ){
+        console.log(`Default List : ${JSON.stringify(list)}` );
+    
         const newList = new ShoppingList({
             name:listName,
             listItems:[],
             lastUpdatedDate: new Date().getTime(),
-            sharedWith:[],
+            sharedWith:[userEmail],
+            isSelected : true
         })
 
         newList.save()
