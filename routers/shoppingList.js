@@ -67,7 +67,7 @@ listRouter.get('/:id/count',async (req,res)=>{
 });
 
 /**
- * add list item to specific shopping list
+ *  share list with another customer
  */
 listRouter.put('/:id/share',async (req,res)=>{ 
     shoppingListController.updateShoppingListUsers(req, res);

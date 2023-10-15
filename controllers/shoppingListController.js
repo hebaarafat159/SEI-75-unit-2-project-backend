@@ -74,17 +74,17 @@ async function getUserShoppingList(req, res){
  */
 async function addShoppingList(req,res){
     console.log(`add Shopping List = ${JSON.stringify(req.params.userId)}`)
-    const userEmail = req.params.userId;
+    // const userEmail = req.params.userId;
     const listName = req.body.listName;
     const list = await ShoppingList.findOne({"name":listName}).populate(["listItems","sharedWith"]);
     if(list === null ){
         console.log(`Default List : ${JSON.stringify(list)}` );
-    
+        
         const newList = new ShoppingList({
-            name:listName,
-            listItems:[],
+            name:req.body.listName,
+            listItems:req.body.items,
             lastUpdatedDate: new Date().getTime(),
-            sharedWith:[userEmail],
+            sharedWith:req.body.sharedEmails,
             isSelected : true
         })
 
@@ -344,3 +344,4 @@ async function getListItemByName(req,res){
         res.send(retrunResponse(error.code, null, error.name));
     } 
 }
+
