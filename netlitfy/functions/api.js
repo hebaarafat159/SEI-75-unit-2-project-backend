@@ -8,8 +8,11 @@ import productRouter from './routers/product.js'
 import userRouter from './routers/user.js'
 import listRouter from './routers/shoppingList.js'
 
-const app = express();
+import express, { Router } from "express";
+import serverless from "serverless-http";
 
+const app = express();
+const router = Router();
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/categories", categoryRouter);
@@ -17,10 +20,12 @@ app.use("/products", productRouter);
 app.use("/users", userRouter);
 app.use("/shoppingLists",listRouter);
 
-const port = process.env.PORT || 4000;
+// const port = process.env.PORT || 4000;
 
-app.listen(port, ()=>{
-    console.log(`listening on port: ${port}`);
-})
+// app.listen(port, ()=>{
+//     console.log(`listening on port: ${port}`);
+// })
+
+app.use("/app/", router);
 
 export const handler = serverless(app);
