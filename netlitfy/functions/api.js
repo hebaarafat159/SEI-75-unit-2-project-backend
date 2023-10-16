@@ -1,37 +1,49 @@
-import 'dotenv/config'
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
+// import 'dotenv/config'
+// import express from "express";
+// import cors from "cors";
+// import bodyParser from "body-parser";
 
-import categoryRouter from './routers/category.js'
-import productRouter from './routers/product.js'
-import userRouter from './routers/user.js'
-import listRouter from './routers/shoppingList.js'
+// import categoryRouter from './routers/category.js'
+// import productRouter from './routers/product.js'
+// import userRouter from './routers/user.js'
+// import listRouter from './routers/shoppingList.js'
+
+// import express, { Router } from "express";
+// import serverless from "serverless-http";
+
+// const app = express();
+
+// app.use(cors());
+// app.use(bodyParser.json());
+// app.use("/categories", categoryRouter);
+// app.use("/products", productRouter);
+// app.use("/users", userRouter);
+// app.use("/shoppingLists",listRouter);
+
+// // const port = process.env.PORT || 4000;
+
+// // app.listen(port, ()=>{
+// //     console.log(`listening on port: ${port}`);
+// // })
+
+// // app.use("/app/", router);
+
+// const router = Router();
+// router.get("/hello", (req, res) => res.send("Hello World!"));
+
+// app.use("/app/", router);
+
+
+// export const handler = serverless(app);
 
 import express, { Router } from "express";
 import serverless from "serverless-http";
 
-const app = express();
-
-app.use(cors());
-app.use(bodyParser.json());
-app.use("/categories", categoryRouter);
-app.use("/products", productRouter);
-app.use("/users", userRouter);
-app.use("/shoppingLists",listRouter);
-
-// const port = process.env.PORT || 4000;
-
-// app.listen(port, ()=>{
-//     console.log(`listening on port: ${port}`);
-// })
-
-// app.use("/app/", router);
+const api = express();
 
 const router = Router();
 router.get("/hello", (req, res) => res.send("Hello World!"));
 
-app.use("/app/", router);
+api.use("/api/", router);
 
-
-export const handler = serverless(app);
+export const handler = serverless(api);
