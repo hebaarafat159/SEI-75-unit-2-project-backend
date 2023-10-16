@@ -9,6 +9,8 @@
   "author": "Heba Arafat",
   "license": "ISC",
   "dependencies": {
+    "@netlify/functions": "^2.3.0",
+    "@types/express": "^4.17.19",
     "@vue/cli": "^5.0.8",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -19,7 +21,8 @@
     "mongoose": "^7.5.3",
     "netlify-cli": "^16.7.0",
     "node-fetch": "^3.3.2",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "serverless-http": "^3.2.0"
   },
   "type": "module",
   "devDependencies": {
