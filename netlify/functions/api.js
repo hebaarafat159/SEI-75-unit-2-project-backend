@@ -47,12 +47,12 @@ const api = express();
 import dotenv from "dotenv";
 dotenv.config();
 
-// api.use(
-//     cors({
-//       origin: "https://", // Replace with your client's origin
-//       credentials: true, // Enable credentials (cookies) in CORS
-//     })
-// );
+api.use(
+    cors({
+      origin: "https://https://startling-mochi-356199.netlify.app/", // Replace with your client's origin
+      credentials: true, // Enable credentials (cookies) in CORS
+    })
+);
 
 mongoose.connect(`${process.env.DATABASE_URL}`);
 
