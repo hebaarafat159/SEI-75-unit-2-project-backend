@@ -238,8 +238,8 @@ async function addProductToShoppingList(req, res){
  */
 async function updateProductInShoppingList(itemId,measureId, quantity, status){
     const lastUpdatedDate = new Date().getTime();
-    // console.log(`****** list item object: ${quantity} ------ 
-    // Updated shopping list time : ${lastUpdatedDate}`);
+    console.log(`****** list item object: ${status} ------ 
+    Updated shopping list time : ${lastUpdatedDate}`);
     try{
         const itemList = await ListItem.findOneAndUpdate({"_id": itemId},
         {"measure_id": measureId, "lastUpdatedDate":lastUpdatedDate,"quantity":quantity,"hasBrought":status}).populate(["product_id","list_id","measure_id"])
@@ -279,13 +279,13 @@ async function deleteProductFromShoppingList(req,res){
  */
 async function updateListItemStatus(req,res){
     const lastUpdatedDate = new Date().getTime();
-    // console.log(`******Updated status list item object: ${req.body.hasBrought} ------ ${req.body._id}  
-    // Updated shopping list time : ${lastUpdatedDate}`);
+    console.log(`******Updated status list item object: ${req.body.hasBrought} ------ ${req.body._id}  
+    Updated shopping list time : ${lastUpdatedDate}`);
     try{
         let id = req.body._id;
-        if(id === '-1')
+        if(id !== '-1')
         { 
-            const response = await updateProductInShoppingList(req.body._id,req.body.measure_id._id,req.body.quantity,req.body.status);
+            const response = await updateProductInShoppingList(req.body._id,req.body.measure_id._id,req.body.quantity,req.body.hasBrought);
             res.send(retrunResponse(200,response,''));
         }
     }catch(error) {
