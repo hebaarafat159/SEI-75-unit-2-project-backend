@@ -26,6 +26,6 @@ app.use("/shoppingLists",listRouter);
 //     console.log(`listening on port: ${port}`);
 // })
 
-app.use("/app/", router);
+// app.use("/app/", router);
 
 export const handler = serverless(app);
