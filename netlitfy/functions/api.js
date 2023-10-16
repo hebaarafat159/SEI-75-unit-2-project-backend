@@ -12,7 +12,7 @@ import express, { Router } from "express";
 import serverless from "serverless-http";
 
 const app = express();
-const router = Router();
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/categories", categoryRouter);
@@ -27,5 +27,11 @@ app.use("/shoppingLists",listRouter);
 // })
 
 // app.use("/app/", router);
+
+const router = Router();
+router.get("/hello", (req, res) => res.send("Hello World!"));
+
+app.use("/app/", router);
+
 
 export const handler = serverless(app);
