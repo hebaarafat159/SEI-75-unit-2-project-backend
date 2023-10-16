@@ -44,6 +44,18 @@ const api = express();
 // const router = Router();
 // router.get("/hello", (req, res) => res.send("Hello World!"));
 
+import dotenv from "dotenv";
+dotenv.config();
+
+// api.use(
+//     cors({
+//       origin: "https://", // Replace with your client's origin
+//       credentials: true, // Enable credentials (cookies) in CORS
+//     })
+// );
+
+mongoose.connect(`${process.env.DATABASE_URL}`);
+
 // api.use("/api/", router);
 api.use(cors());
 api.use(bodyParser.json());
