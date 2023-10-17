@@ -12,7 +12,7 @@ import listRouter from '../../routers/shoppingList.js'
 
 // mongoose.connect(`${process.env.DATABASE_URL}`);
 
-// const api = express();
+const api = express();
 
 // api.use(
 //   cors({
