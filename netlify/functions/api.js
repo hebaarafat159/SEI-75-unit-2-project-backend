@@ -5,6 +5,7 @@ import categoryRouter from '../../routers/category.js'
 import productRouter from '../../routers/product.js'
 import userRouter from '../../routers/user.js'
 import listRouter from '../../routers/shoppingList.js'
+import mongoose, { Schema } from "mongoose";
 
 mongoose.connect(`${process.env.DATABASE_URL}`);
 
