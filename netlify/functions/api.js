@@ -41,11 +41,8 @@ import serverless from "serverless-http";
 
 const api = express();
 
-// const router = Router();
-// router.get("/hello", (req, res) => res.send("Hello World!"));
-
-import dotenv from "dotenv";
-dotenv.config();
+const router = Router();
+router.get("/hello", (req, res) => res.send("Hello World!"));
 
 api.use(
     cors({
@@ -56,11 +53,12 @@ api.use(
 
 mongoose.connect(`${process.env.DATABASE_URL}`);
 
-// api.use("/api/", router);
+api.use("/api/", router);
 api.use(cors());
 api.use(bodyParser.json());
 api.use("/categories", categoryRouter);
 api.use("/products", productRouter);
 api.use("/users", userRouter);
 api.use("/shoppingLists",listRouter);
+
 export const handler = serverless(api);
