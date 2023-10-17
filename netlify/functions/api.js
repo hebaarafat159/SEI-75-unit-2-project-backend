@@ -5,6 +5,9 @@ import categoryRouter from '../../routers/category.js'
 import productRouter from '../../routers/product.js'
 import userRouter from '../../routers/user.js'
 import listRouter from '../../routers/shoppingList.js'
+
+import cors from "cors";
+
 import mongoose, { Schema } from "mongoose";
 
 mongoose.connect(`${process.env.DATABASE_URL}`);
@@ -13,7 +16,7 @@ const api = express();
 
 api.use(
   cors({
-    origin: "https://startling-mochi-356199.netlify.app/", // Replace with your client's origin
+    origin: "https://startling-mochi-356199.netlify.app", // Replace with your client's origin
     credentials: true, // Enable credentials (cookies) in CORS
   })
 );
