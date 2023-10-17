@@ -13,8 +13,8 @@ router.get("/hello", (req, res) => res.send("Hello World!"));
 
 api.use("/api/", router);
 api.use("/api/categories", categoryRouter);
-app.use("/api/products", productRouter);
-app.use("/api/users", userRouter);
-app.use("/api/shoppingLists",listRouter);
+api.use("/api/products", productRouter);
+api.use("/api/users", userRouter);
+api.use("/api/shoppingLists",listRouter);
 
 export const handler = serverless(api);
