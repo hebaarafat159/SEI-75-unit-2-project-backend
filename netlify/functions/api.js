@@ -25,12 +25,12 @@ router.get("/hello", (req, res) => res.send("Hello World!"));
 
 // mongoose.connect(`${process.env.DATABASE_URL}`);
 
-api.use(cors());
-api.use(bodyParser.json());
+// api.use(cors());
+// api.use(bodyParser.json());
 api.use("/api/", router);
-api.use("/categories", categoryRouter);
-api.use("/products", productRouter);
-api.use("/users", userRouter);
-api.use("/shoppingLists",listRouter);
+// api.use("/categories", categoryRouter);
+// api.use("/products", productRouter);
+// api.use("/users", userRouter);
+// api.use("/shoppingLists",listRouter);
 
 export const handler = serverless(api);
