@@ -1,5 +1,3 @@
-
-import express from "express";
 import express, { Router } from "express";
 import serverless from "serverless-http";
 
