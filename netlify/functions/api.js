@@ -6,7 +6,16 @@ import productRouter from '../../routers/product.js'
 import userRouter from '../../routers/user.js'
 import listRouter from '../../routers/shoppingList.js'
 
+mongoose.connect(`${process.env.DATABASE_URL}`);
+
 const api = express();
+
+api.use(
+  cors({
+    origin: "https://startling-mochi-356199.netlify.app/", // Replace with your client's origin
+    credentials: true, // Enable credentials (cookies) in CORS
+  })
+);
 
 const router = Router();
 router.get("/hello", (req, res) => res.send("Hello World!"));
