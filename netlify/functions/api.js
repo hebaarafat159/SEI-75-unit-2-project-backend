@@ -11,51 +11,23 @@ import listRouter from './routers/shoppingList.js'
 import express, { Router } from "express";
 import serverless from "serverless-http";
 
-// const app = express();
-
-// app.use(cors());
-// app.use(bodyParser.json());
-// app.use("/categories", categoryRouter);
-// app.use("/products", productRouter);
-// app.use("/users", userRouter);
-// app.use("/shoppingLists",listRouter);
-
-// // const port = process.env.PORT || 4000;
-
-// // app.listen(port, ()=>{
-// //     console.log(`listening on port: ${port}`);
-// // })
-
-// // app.use("/app/", router);
-
-// const router = Router();
-// router.get("/hello", (req, res) => res.send("Hello World!"));
-
-// app.use("/app/", router);
-
-
-// export const handler = serverless(app);
-
-import express, { Router } from "express";
-import serverless from "serverless-http";
-
 const api = express();
 
 const router = Router();
 router.get("/hello", (req, res) => res.send("Hello World!"));
 
-api.use(
-    cors({
-      origin: "https://https://startling-mochi-356199.netlify.app/", // Replace with your client's origin
-      credentials: true, // Enable credentials (cookies) in CORS
-    })
-);
+// api.use(
+//     cors({
+//       origin: "https://https://startling-mochi-356199.netlify.app/", // Replace with your client's origin
+//       credentials: true, // Enable credentials (cookies) in CORS
+//     })
+// );
 
-mongoose.connect(`${process.env.DATABASE_URL}`);
+// mongoose.connect(`${process.env.DATABASE_URL}`);
 
-api.use("/api/", router);
 api.use(cors());
 api.use(bodyParser.json());
+api.use("/api/", router);
 api.use("/categories", categoryRouter);
 api.use("/products", productRouter);
 api.use("/users", userRouter);
