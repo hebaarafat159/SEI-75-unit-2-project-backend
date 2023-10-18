@@ -1,5 +1,7 @@
 import express, { Router } from "express";
 import serverless from "serverless-http";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 import categoryRouter from '../../routers/category.js'
 import productRouter from '../../routers/product.js'
@@ -24,6 +26,8 @@ const api = express();
 const router = Router();
 router.get("/hello", (req, res) => res.send("Hello World!"));
 
+api.use(cors());
+api.use(bodyParser.json());
 api.use("/api/", router);
 api.use("/api/categories", categoryRouter);
 api.use("/api/products", productRouter);
